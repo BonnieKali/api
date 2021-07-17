@@ -1,5 +1,5 @@
 const router = require("express").Router();
-import User, { findOne } from "../models/User";
+const User = require("../models/User");
 
 function validate(s1, s2) {
   const s1_trimmed = s1.toString().trim();
@@ -14,10 +14,11 @@ router.post("/register", async (req,res) => {
       username: req.body.username,
       password: req.body.password
     });
+    console.log("Attempting to save "+JSON.stringify(newUser));
 
     const user = await newUser.save();
     const {password, ...others} = user._doc;
-    console.log("User "+ others.toString()+ " successfully registered.")
+    console.log("User "+ others.toString()+ " successfully registered.");
     res.status(200).json(others);
 
   } catch(err){
@@ -28,14 +29,14 @@ router.post("/register", async (req,res) => {
 // Login
 router.post("/login", async (req,res) => {
   try{
-    const user = await findOne({username: req.body.username});
+    const user = await User.findOne({username: req.body.username});
     !user && res.status(400).json("Wrong username!");
 
     const validate_password = validate(req.body.password, user.password);
     !validate_password && res.status(400).json("Wrong password!");
 
     const {password, ...others} = user._doc;
-    console.log("User "+ others.toString()+ " successfully logged in.")
+    console.log("User "+ JSON.stringify(others) +" successfully logged in.");
     res.status(200).json(others);
 
   } catch(err){
@@ -44,4 +45,4 @@ router.post("/login", async (req,res) => {
 });
 
 // Export module
-export default router;
+module.exports = router;

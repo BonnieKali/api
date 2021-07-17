@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 
 const authRoute = require("./routes/auth");
+const usersRoute = require("./routes/users");
 
 // Connect to db
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(express.json());  // To be able to send json data as part of the body
 
 // Set up routes
 app.use("/api/auth", authRoute);
+app.use("/api/users", usersRoute);
 
 // Start app
 app.listen("5000", ()=>{
